@@ -42,6 +42,34 @@ class Article:
         conn.close()
         return cls(*rows) if rows else None
 
+    @classmethod
+    def get_article_by_title(cls, title):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM articles WHERE title = ?", (title,))
+        row = cursor.fetchone()
+        conn.close()
+        return cls(*row) if row else None
+    
+    @classmethod
+    def get_all_articles_by_author(cls, author_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM articles WHERE author_id = ?", (author_id,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [cls(*row) for row in rows]
+    
+
+    @classmethod
+    def find_all_articles_by_magazine(cls, magazine_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM articles WHERE magazine_id = ?", (magazine_id,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [cls(*row) for row in rows]
+
     # foreign keys  AKA RELATIONSHIP
     def get_author(self):
         from author import Author
