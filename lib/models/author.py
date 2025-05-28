@@ -1,5 +1,6 @@
-import sqlite3
 from connection import get_connection
+from lib.models.article import Article
+from lib.models.magazine import Magazine
 
 class Author :
     def __init__(self, id , name):
@@ -14,13 +15,20 @@ class Author :
         rows = cursor.fetchone()
         conn.close()
         return cls(*rows) if rows else None
-    
+
     @classmethod
+    def get_by_name(cls, name):
+        conn= get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM authors WHERE name = ?", (name,))
+        row = cursor.fetchone()
+        conn.close()
+        return cls (*row)if row else None
+     
     def get_articles(self):
         conn = get_connection( )
         cursor =conn.cursor()
-        cursor.execute("SELECT * FROM articles  WHERE id =?",(self.id,))
-        articles = cursor.fetchall()
+        cursor.execute("SELECT * FROM articles  WHERE author_id =?",(self.id,))
+        rows = cursor.fetchall()
         conn.close()
-        return articles
-    
+        return [Article(*row)for row in rows]
