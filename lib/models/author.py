@@ -42,7 +42,16 @@ class Author :
         conn.close()
         return self
     
-
+    def magazines(self):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute (""" 
+                        SELECT DISTINCT m. * FROM magazines m 
+                        JOIN articles a ON m.id = a.magazine_id WHERE a.author_id = ?
+                        """,(self.id,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [Magazine(*row)for row in rows]
     
 
     def add_article(self, magazine, title):
@@ -54,3 +63,14 @@ class Author :
         conn.commit()
         conn.close()
 
+    def topic_areas(self):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT DISTINCT m.category FROM magazines m
+            JOIN articles a ON m.id = a.magazine_id
+            WHERE a.author_id = ?
+        """, (self.id,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [row[0] for row in rows]    
