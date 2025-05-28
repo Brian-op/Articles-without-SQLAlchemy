@@ -55,13 +55,11 @@ class Author :
     
 
     def add_article(self, magazine, title):
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO articles (title, self.id, magazine.id)"
-            )
-        conn.commit()
-        conn.close()
+        from article import Article
+        article = Article(None, title, self.id, magazine.id)
+        article.save()
+        return article
+
 
     def topic_areas(self):
         conn = get_connection()
