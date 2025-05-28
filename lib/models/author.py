@@ -32,3 +32,25 @@ class Author :
         rows = cursor.fetchall()
         conn.close()
         return [Article(*row)for row in rows]
+    
+    def save(self):
+        conn = get_connection()
+        cursor =cursor()
+        cursor.execute =("INSERT INTO authors (name) VALUES (?)", (self.name,))
+        conn.commit()
+        self.id = cursor.lastrowid
+        conn.close()
+        return self
+    
+
+    
+
+    def add_article(self, magazine, title):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO articles (title, self.id, magazine.id)"
+            )
+        conn.commit()
+        conn.close()
+
